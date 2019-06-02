@@ -30,24 +30,16 @@
     var current_question_index = 0;
 
     var current_task = null;
+    var asked_type = "date"
 
-
-    function get_random_task(task_type) {
-    }
-
-
-    function score_task(task, answer) {
-    }
-
-
-    function setRandomDateEventQuestion() {
+    function setRandomQuestion() {
         $.ajax({
             url: "service.php",
             type: "POST",
 
             data: JSON.stringify({
                 "endpoint": "get_random_task",
-                "task_type": "date",
+                "task_type": asked_type,
             }),
 
             contentType: "application/json",
@@ -62,6 +54,36 @@
                 console.log(e);
             }
         });
+    }
+
+    function setRandomDateEventQuestion() {
+        if (Math.random() >= 0.5) {
+            asked_type = "date";
+            setRandomQuestion();
+        } else {
+            asked_type = "event";
+            setRandomQuestion();
+        }
+    }
+
+    function setRandomPersonQuestion() {
+        asked_type = "person";
+        setRandomQuestion();
+    }
+
+    function setRandomTermQuestion() {
+        asked_type = "term";
+        setRandomQuestion();
+    }
+
+    function setRandomReasonResultQuestion() {
+        if (Math.random() >= 0.5) {
+            asked_type = "reason";
+            setRandomQuestion();
+        } else {
+            asked_type = "result";
+            setRandomQuestion();
+        }
     }
 
     var all_answers = {
@@ -87,7 +109,7 @@
       sleep(2000).then(() => {
 
         if (last_true) {
-            setRandomDateEventQuestion();
+            setRandomQuestion();
         } else {
       	    document.getElementById("question").innerHTML = current_task.question;
         }
@@ -146,9 +168,9 @@
 
     <div class="menu">
         <div class="column" onclick="setRandomDateEventQuestion()">Даты и события</div>
-        <div class="column" onclick="">Участники</div>
-        <div class="column" onclick="">Термины</div>
-        <div class="column" onclick="">Причины и следствия</div>
+        <div class="column" onclick="setRandomPersonQuestion()">Участники</div>
+        <div class="column" onclick="setRandomTermQuestion()">Термины</div>
+        <div class="column" onclick="setRandomReasonResultQuestion()">Причины и следствия</div>
         <div class="column robot" onclick="">Задать вопрос ;)</div>
     </div>
 
