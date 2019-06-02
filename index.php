@@ -26,49 +26,53 @@
       return new Promise((resolve) => setTimeout(resolve, time));
     }
 
+    var questions = ["hello"];
     var current_question_index = 0;
-    var questions = [
-      "В каком году произошло призвание Рюрика на престол?",
-      "Год созвания первого Земского Собора?",
-      "Какое событие произошло 14 декабря 1825 года?",
-      "Когда произошло Бородинское сражение?",
-      "В каком году Петр Первый объявляет себя Императором России?",
-      "Какая война происходила с 1700 по 1721 года?",
-      "В каком году произошел Медный Бунт в Москве?",
-      "При Иване 4 начинается новый режим в стране (1565-1572) назовите его.",
-      "В каком году в Москве был Соляной бунт?",
-      "В каком году Земский собор избрал на царствование Романовых?",
-      "Какое известное восстание потрясло Россию в 1667 году? ",
-      "В каком году был подписан Тильзитский мир?",
-      "В каком году произошла Куликовская битва?",
-      "Чье правление длится с 1801 по 1825 года?",
-      "Годы правления Александра 2?",
-      "В каком году был принят указ “О вольных хлебопашцах”",
-      "В каком году принята Русская правда?",
-      "Кто вступил на пост президента России в 2000 году?",
-      "В каком году вооруженные силы РФ были введены в Чечню для наведения конституционного порядка?",
-      "Кто стал автором реформы 1553 года? Именно она стала причиной церковного раскола.",
-      "В каком году был убит царевич Дмитрий?",
-      "Как называется период Российской истории 1603-1613?",
-      "В каком году произошла Невская битва?",
-      "В каком году Иван 4 объявляет ссебя царем?",
-      "Год крещения Руси"
-    ];
 
-    function setRandomQuestion() {
-      current_question_index = Math.floor(Math.random() * questions.length);
-      var question = questions[current_question_index];
-      document.getElementById("question").innerHTML = question;
+    var current_task = null;
+
+
+    function get_random_task(task_type) {
+    }
+
+
+    function score_task(task, answer) {
+    }
+
+
+    function setRandomDateEventQuestion() {
+        $.ajax({
+            url: "service.php",
+            type: "POST",
+
+            data: JSON.stringify({
+                "endpoint": "get_random_task",
+                "task_type": "date",
+            }),
+
+            contentType: "application/json",
+
+            success: function(data) {
+                console.log(data)
+                current_task = data.task;
+      	        document.getElementById("question").innerHTML = current_task.question;
+            },
+
+            error: function(e) {
+                console.log(e);
+            }
+        });
     }
 
     var all_answers = {
-      "False": [
+      false: [
       	"Вы ошиблись :(",
       	"Нет, это не так :(",
     	"Подумайте еще...",
     	"Пока не то..."
-          ],
-      "True": [
+      ],
+
+      true: [
       	"Правильно! :)",
       	"Верно!",
       	"Да, именно!",
@@ -81,50 +85,55 @@
 
     function setup_question() {
       sleep(2000).then(() => {
+
         if (last_true) {
-        	setRandomQuestion();
+            setRandomDateEventQuestion();
         } else {
-      	var question = questions[current_question_index];
-      	document.getElementById("question").innerHTML = question;
+      	    document.getElementById("question").innerHTML = current_task.question;
         }
 
         document.getElementById("answer_input").value = "";
+
       });
     }
 
     function validateForm() {
-      $.ajax({
-          url: "check_answer.php",
-          type: "POST",
+        $.ajax({
+            url: "service.php",
+            type: "POST",
 
-          data: JSON.stringify({
-              "id": current_question_index + 1,
-              "user_answer": document.getElementById("answer_input").value
-          }),
-          contentType: "application/json",
+            data: JSON.stringify({
+                "endpoint": "score_task",
+                "task_type": current_task["type"],
+                "task_id": current_task["id"],
+                "answer": document.getElementById("answer_input").value
+            }),
 
-          success: function(data) {
-            console.log(data);
-            var answers = all_answers[data.status]
-      	var answer = answers[Math.floor(Math.random() * answers.length)];
-      	document.getElementById("question").innerHTML = "<i>" + answer + "</i>";
+            contentType: "application/json",
 
-            if (data.status === "True") {
-                last_true = true;
-            } else {
+            success: function(data) {
+                console.log(data)
+
+                var answers = all_answers[data.answer.score]
+      	        var answer = answers[Math.floor(Math.random() * answers.length)];
+      	        document.getElementById("question").innerHTML = "<i>" + answer + "</i>";
+
+                if (data.answer.score) {
+                    last_true = true;
+                } else {
+                    last_true = false;
+                }
+
+                setup_question();
+            },
+
+            error: function(e) {
+                console.log(e);
+      	        document.getElementById("question").innerHTML = "<i>" + "Что-то пошло не так..." + "</i>";
                 last_true = false;
+                //setup_question();
             }
-
-            setup_question();
-          },
-
-          error: function(e) {
-      	  document.getElementById("question").innerHTML = "<i>" + "Что-то пошло не так..." + "</i>";
-              console.log(e);
-              last_true = false;
-              setup_question();
-          }
-      });
+        });
 
       return false;
     }
@@ -136,11 +145,11 @@
 <body>
 
     <div class="menu">
-        <div class="column" onclick="setRandomQuestion()">Даты и события</div>
-        <div class="column" onclick="setRandomQuestion()">Участники</div>
-        <div class="column" onclick="setRandomQuestion()">Термины</div>
-        <div class="column" onclick="setRandomQuestion()">Причины и следствия</div>
-        <div class="column robot" onclick="setRandomQuestion()">Задать вопрос ;)</div>
+        <div class="column" onclick="setRandomDateEventQuestion()">Даты и события</div>
+        <div class="column" onclick="">Участники</div>
+        <div class="column" onclick="">Термины</div>
+        <div class="column" onclick="">Причины и следствия</div>
+        <div class="column robot" onclick="">Задать вопрос ;)</div>
     </div>
 
 
@@ -163,7 +172,7 @@
     </div>
 
     <script>
-    setRandomQuestion();
+    setRandomDateEventQuestion();
     </script>
 
 </body>
