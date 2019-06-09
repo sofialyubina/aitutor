@@ -80,6 +80,20 @@
   font-family: inherit;
 }
 
+.record_button {
+  background-color: #eee;
+  color: black;
+  font-size: 12px;
+  padding: 10px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.record_button:hover {
+  background-color: #aaa;
+}
+
 .mark {
   margin: 70 0 0 0;
   text-align: center;

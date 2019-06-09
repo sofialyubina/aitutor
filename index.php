@@ -160,6 +160,44 @@
       return false;
     }
 
+    var record_started = false;
+
+    var record_img = "https://cdn0.iconfinder.com/data/icons/buntu-media-2/100/built-in_microphone_glyph_convert-512.png";
+    var record_started_img = "https://www.nestigator.com/assets/property_loading_v3-bcc913d33efd9e44f1496d86b19f8153a190230d09bca1e158b90e80a50d99e6.gif";
+
+	var recognizer = new webkitSpeechRecognition();
+	recognizer.lang = 'ru-Ru';
+	recognizer.onresult = function (event) {
+	  var result = event.results[event.resultIndex];
+	  if (result.isFinal) {
+	    console.log('Вы сказали: ' + result[0].transcript);
+    	document.getElementById("answer_input").value = result[0].transcript;
+
+	    recognizer.stop();
+	    console.log("Recording stopped");
+    	document.getElementById("record_img").src = record_img;
+        record_started = false;
+	  } else {
+	    console.log('Промежуточный результат: ', result[0].transcript);
+	  }
+	};
+
+
+	function startrecord() {
+        if (record_started) {
+	        recognizer.stop();
+	        console.log("Recording stopped");
+    	    document.getElementById("record_img").src = "https://cdn0.iconfinder.com/data/icons/buntu-media-2/100/built-in_microphone_glyph_convert-512.png";
+            record_started = false;
+        } else {
+            document.getElementById("record_img").src = record_started_img;
+            record_started = true;
+	        console.log("Recording started");
+		    recognizer.start();
+        }
+	}
+
+
     </script>
 
 </head>
@@ -183,6 +221,7 @@
     <div class="answer">
     <form action="" method="post"  onsubmit="return validateForm()" >
     <input autocomplete="off" id="answer_input" type="text"> </input>
+    <button type="button" onclick="startrecord()" class="record_button" ><img id="record_img" src="https://cdn0.iconfinder.com/data/icons/buntu-media-2/100/built-in_microphone_glyph_convert-512.png" width="20"/></button>
     <input type="submit" hidden>
     </form>
     </div>
