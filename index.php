@@ -136,6 +136,15 @@
             success: function(data) {
                 console.log(data)
 
+      	        document.getElementById("question").innerHTML = "<i> Вы ответили на " + data.answer.score + " из 10!</i>";
+                if (data.answer.score < 5) {
+                    last_true = false;
+                } else {
+                    last_true = true;
+                }
+
+
+                /*
                 var answers = all_answers[data.answer.score]
       	        var answer = answers[Math.floor(Math.random() * answers.length)];
       	        document.getElementById("question").innerHTML = "<i>" + answer + "</i>";
@@ -145,6 +154,7 @@
                 } else {
                     last_true = false;
                 }
+                */
 
                 setup_question();
             },
