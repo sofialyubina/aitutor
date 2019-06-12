@@ -34,7 +34,7 @@
 
     function setRandomQuestion() {
         $.ajax({
-            url: "service.php",
+            url: "flask_service.php",
             type: "POST",
 
             data: JSON.stringify({
@@ -121,7 +121,7 @@
 
     function validateForm() {
         $.ajax({
-            url: "service.php",
+            url: "flask_service.php",
             type: "POST",
 
             data: JSON.stringify({
