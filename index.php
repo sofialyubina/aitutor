@@ -177,6 +177,7 @@
 	    console.log("Recording stopped");
     	document.getElementById("record_img").src = record_img;
         record_started = false;
+        validateForm();
 	  } else {
 	    console.log('Промежуточный результат: ', result[0].transcript);
 	  }
@@ -221,7 +222,7 @@
     <div class="answer">
     <form action="" method="post"  onsubmit="return validateForm()" >
     <input autocomplete="off" id="answer_input" type="text"> </input>
-    <button type="button" onclick="startrecord()" class="record_button" ><img id="record_img" src="https://cdn0.iconfinder.com/data/icons/buntu-media-2/100/built-in_microphone_glyph_convert-512.png" width="20"/></button>
+    <button type="button" onclick="startrecord()" class="record_button" ><img id="record_img" src="https://cdn0.iconfinder.com/data/icons/buntu-media-2/100/built-in_microphone_glyph_convert-512.png" width="50"/></button>
     <input type="submit" hidden>
     </form>
     </div>

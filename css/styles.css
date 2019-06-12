@@ -38,8 +38,8 @@
 
 
 .content {
-  width: 600px;
-  height: 400px;
+  width: 1000px;
+  height: 500px;
 
   position:absolute; /*it can be fixed too*/
   left:0; right:0;
@@ -53,9 +53,9 @@
 
 .question {
   text-align: center;
-  width: 600px;
+  width: 1000px;
   height: 200px;
-  font-size: 3em;
+  font-size: 2.5em;
   color: #fefefe;
   font-weight: bold;
 }
@@ -81,6 +81,7 @@
 }
 
 .record_button {
+  margin: 0 0 0 20;
   background-color: #eee;
   color: black;
   font-size: 12px;
